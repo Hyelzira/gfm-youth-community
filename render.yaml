@@ -1,0 +1,25 @@
+# render.yaml (Place this in the root of your repository)
+services:
+  - type: static
+    name: house-of-opra
+    # Set your build command (e.g., npm run build)
+    buildCommand: npm run build
+    # Set the publish path to your build output directory (e.g., dist or build)
+    # REPLACE 'build' with your actual build output folder name (e.g., 'dist')
+    staticPublishPath: dist
+    
+    # --- KEY FIX: Add a custom header rule ---
+    headers:
+      # This rule applies to ALL paths (*)
+      - path: /*
+        # The key for client-side routing is the Status property
+        # It tells the browser that this path should be treated as a redirect/rewrite
+        # The value of 200 means "OK" but internally redirects to the specified file.
+        headers:
+          - key: 'Cache-Control'
+            value: 'max-age=0'
+          - key: 'Content-Type'
+            value: 'text/html; charset=UTF-8'
+        status: 200
+        # The server will internally rewrite the request to index.html
+        rewrite: /index.html
